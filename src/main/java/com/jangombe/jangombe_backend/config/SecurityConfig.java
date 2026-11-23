@@ -1,6 +1,8 @@
+
 package com.jangombe.jangombe_backend.config;
 
 import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
@@ -36,17 +38,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             SecurityContextRepository securityContextRepository) throws Exception {
+
         http
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .securityContext(context -> context.securityContextRepository(securityContextRepository))
+            .securityContext(context ->
+                context.securityContextRepository(securityContextRepository))
             .exceptionHandling(exceptions -> exceptions
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .authenticationEntryPoint(
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/login").permitAll()
                 .requestMatchers("/api/auth/register").permitAll()
                 .requestMatchers("/api/auth/logout").permitAll()
+                .requestMatchers("/api/health").permitAll()
                 .anyRequest().authenticated());
 
         return http.build();
@@ -55,13 +61,22 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        config.setAllowedOriginPatterns(
+            List.of("http://localhost:*", "http://127.0.0.1:*"));
+
+        config.setAllowedMethods(
+            List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
+
