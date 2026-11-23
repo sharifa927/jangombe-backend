@@ -63,7 +63,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOriginPatterns(
-            List.of("http://localhost:*", "http://127.0.0.1:*"));
+            List.of("http://localhost:*", "http://127.0.0.1:*", "https://jangombe-frontend.vercel.app"));
 
         config.setAllowedMethods(
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
